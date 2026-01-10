@@ -8,13 +8,11 @@ import {
   formatRevelationLine,
 } from "./formatters";
 
-// Tus módulos existentes (si cambian los paths, ajusta aquí):
-// - adapter debe exponer createAdapter()
-// - happyPath debe exponer runHappyPath(adapter, now)
+// CommonJS require para no pelear con tsconfig/moduleResolution
 const { createAdapter } = require("./adapter");
 const { runHappyPath } = require("./flows/happyPath");
 
-// Usuarios v1 (si tu repo ya tiene constantes, puedes reemplazar esto por ellas)
+// Usuarios v1 demo
 const CLI_USERS = {
   A: "userA",
   B: "userB",
@@ -22,11 +20,28 @@ const CLI_USERS = {
 
 type Adapter = any;
 
+type HeaderState = {
+  proposals: any[];
+  copresences: any[];
+  activeA: any | null;
+  activeB: any | null;
+  revA: any[];
+  revB: any[];
+};
+
 function isNumeric(s: string) {
   return /^[0-9]+$/.test(s.trim());
 }
 
-async function safeCall<T>(ui: ReturnType<typeof createUi>, fn: (() => Promise<T>) | undefined, notAvailableMsg: string): Promise<T | null> {
+function asArray(v: any): any[] {
+  return Array.isArray(v) ? v : [];
+}
+
+async function safeCall(
+  ui: ReturnType<typeof createUi>,
+  fn: (() => Promise<any>) | undefined,
+  notAvailableMsg: string
+): Promise<any | null> {
   if (!fn) {
     ui.warn(notAvailableMsg);
     return null;
@@ -48,8 +63,8 @@ async function main() {
   const A = CLI_USERS.A;
   const B = CLI_USERS.B;
 
-  // onboarding local (solo UI) para habilitar menú dinámico sin depender de backend
-  const onboard = {
+  // onboarding local (solo UI) para menú dinámico
+  const onboard: Record<string, { consent: boolean; profile: boolean }> = {
     [A]: { consent: false, profile: false },
     [B]: { consent: false, profile: false },
   };
@@ -61,14 +76,42 @@ async function main() {
     return userId;
   }
 
-  async function headerStatus() {
-    // Intentar leer estado real si el adapter lo soporta; si no, mostrar algo útil igualmente
-    const proposals = (await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")) ?? [];
-    const copresences = (await safeCall(ui, adapter.listCoPresences?.bind(adapter), "adapter.listCoPresences no disponible")) ?? [];
-    const activeA = await safeCall(ui, () => adapter.getActiveWindowForUser(A, now), "adapter.getActiveWindowForUser no disponible");
-    const activeB = await safeCall(ui, () => adapter.getActiveWindowForUser(B, now), "adapter.getActiveWindowForUser no disponible");
-    const revA = (await safeCall(ui, () => adapter.getRevelations(A, now), "adapter.getRevelations no disponible")) ?? [];
-    const revB = (await safeCall(ui, () => adapter.getRevelations(B, now), "adapter.getRevelations no disponible")) ?? [];
+  async function headerStatus(): Promise<HeaderState> {
+    const proposals = asArray(
+      await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")
+    );
+
+    const copresences = asArray(
+      await safeCall(ui, adapter.listCoPresences?.bind(adapter), "adapter.listCoPresences no disponible")
+    );
+
+    const activeA = await safeCall(
+      ui,
+      adapter.getActiveWindowForUser ? () => adapter.getActiveWindowForUser(A, now) : undefined,
+      "adapter.getActiveWindowForUser no disponible"
+    );
+
+    const activeB = await safeCall(
+      ui,
+      adapter.getActiveWindowForUser ? () => adapter.getActiveWindowForUser(B, now) : undefined,
+      "adapter.getActiveWindowForUser no disponible"
+    );
+
+    const revA = asArray(
+      await safeCall(
+        ui,
+        adapter.getRevelations ? () => adapter.getRevelations(A, now) : undefined,
+        "adapter.getRevelations no disponible"
+      )
+    );
+
+    const revB = asArray(
+      await safeCall(
+        ui,
+        adapter.getRevelations ? () => adapter.getRevelations(B, now) : undefined,
+        "adapter.getRevelations no disponible"
+      )
+    );
 
     ui.title("LATENTE — CLI");
     ui.info(
@@ -80,14 +123,11 @@ async function main() {
         `Revelaciones activas: A=${revA.length} B=${revB.length}`,
       ].join(" | ")
     );
+
     return { proposals, copresences, activeA, activeB, revA, revB };
   }
 
-  async function selectFromListByIndexOrId<T extends { id?: string }>(
-    items: T[],
-    input: string,
-    uiName: string
-  ): Promise<T | null> {
+  async function selectFromListByIndexOrId(items: any[], input: string, uiName: string): Promise<any | null> {
     const trimmed = input.trim();
     if (!trimmed) return items[0] ?? null;
 
@@ -120,32 +160,28 @@ async function main() {
       { key: "14", label: "Cambiar NOW (simular tiempo)" },
 
       ...(onboardedA && onboardedB
-        ? ([
+        ? [
             { key: "3", label: "Ingestar eventos demo (A/B)" },
             { key: "4", label: "Detectar patrones (A/B)" },
             { key: "5", label: "Detectar co-presencias (A,B)" },
             { key: "6", label: "Generar propuestas" },
-          ] as const)
-        : ([] as const)),
+          ]
+        : []),
 
       ...(hasProposals
-        ? ([
+        ? [
             { key: "7", label: "Aceptar/Declinar propuesta (A/B)" },
             { key: "8", label: "Activar ventana desde propuesta" },
-          ] as const)
-        : ([] as const)),
+          ]
+        : []),
 
-      ...(hasAnyActiveWindow
-        ? ([{ key: "9", label: 'Confirmar "Creo que te he visto" (A/B)' }] as const)
-        : ([] as const)),
+      ...(hasAnyActiveWindow ? [{ key: "9", label: 'Confirmar "Creo que te he visto" (A/B)' }] : []),
 
       { key: "10", label: "Ver revelaciones (A/B)" },
       { key: "11", label: "Seguridad: Bloquear / Reportar" },
       { key: "12", label: "Eliminar cuenta (A/B)" },
 
-      ...(onboardedA && onboardedB
-        ? ([{ key: "13", label: "Demo guiada (happy path automático)" }] as const)
-        : ([] as const)),
+      ...(onboardedA && onboardedB ? [{ key: "13", label: "Demo guiada (happy path automático)" }] : []),
 
       { key: "15", label: "Debug: listar estado repos" },
       { key: "0", label: "Salir" },
@@ -154,27 +190,22 @@ async function main() {
     const choice = (await ui.menu("Menú principal", menuItems)).trim().toLowerCase();
 
     switch (choice) {
-      case "0": {
+      case "0":
         ui.info("Saliendo...");
         ui.close();
         process.exit(0);
-      }
 
       case "1": {
         const userId = await pickUserId();
 
-        // Si tu adapter tiene algo tipo setConsent, úsalo; si no, guardamos en estado local.
-        const ok = await safeCall(
+        await safeCall(
           ui,
-          adapter.setConsent
-            ? () => adapter.setConsent(userId, { accepted: true, now })
-            : undefined,
+          adapter.setConsent ? () => adapter.setConsent(userId, { accepted: true, now }) : undefined,
           "adapter.setConsent no disponible. Marcando consentimiento solo en estado local."
         );
 
         onboard[userId].consent = true;
         ui.info("Consentimiento registrado (v1).");
-        if (ok) ui.info("Consentimiento persistido en adapter.");
         break;
       }
 
@@ -185,17 +216,14 @@ async function main() {
         const ageRaw = (await ui.ask("Edad (Enter=30): ")).trim() || "30";
         const age = Number(ageRaw);
 
-        const ok = await safeCall(
+        await safeCall(
           ui,
-          adapter.setProfile
-            ? () => adapter.setProfile(userId, { name, age, now })
-            : undefined,
+          adapter.setProfile ? () => adapter.setProfile(userId, { name, age, now }) : undefined,
           "adapter.setProfile no disponible. Marcando perfil solo en estado local."
         );
 
         onboard[userId].profile = true;
         ui.info(`Perfil mínimo guardado: name=${name}, age=${age}`);
-        if (ok) ui.info("Perfil persistido en adapter.");
         break;
       }
 
@@ -203,12 +231,9 @@ async function main() {
         const userId = await pickUserId();
         ui.title("Ingesta eventos demo");
 
-        // Si tienes un método de ingesta demo en adapter, úsalo; si no, intenta ingestEvent repetidamente.
         const howMany = Number((await ui.ask("¿Cuántos eventos? (Enter=3): ")).trim() || "3");
         const place = (await ui.ask("place_category (Enter=cafe): ")).trim() || "cafe";
         const bucket = (await ui.ask("time_bucket (Enter=morning): ")).trim() || "morning";
-
-        const weekIds = ["2026-W01", "2026-W02", "2026-W03", "2026-W04", "2026-W05"].slice(0, Math.max(1, howMany));
 
         const res =
           (await safeCall(
@@ -223,6 +248,7 @@ async function main() {
               ui.warn("adapter.ingestEvent no disponible. No puedo ingestar eventos.");
               return null;
             }
+            const weekIds = ["2026-W01", "2026-W02", "2026-W03", "2026-W04", "2026-W05"].slice(0, Math.max(1, howMany));
             for (const w of weekIds) {
               await adapter.ingestEvent(userId, {
                 time_bucket: bucket,
@@ -302,8 +328,9 @@ async function main() {
       case "7": {
         ui.title("Aceptar / Declinar propuesta");
 
-        const proposals =
-          (await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")) ?? [];
+        const proposals = asArray(
+          await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")
+        );
 
         if (proposals.length === 0) {
           ui.warn("No hay propuestas.");
@@ -311,7 +338,7 @@ async function main() {
         }
 
         ui.info("Propuestas:");
-        ui.info(proposals.map(formatProposalLine).join("\n"));
+        ui.info(proposals.map((p: any, i: number) => formatProposalLine(p, i)).join("\n"));
 
         const input = await ui.ask("Selecciona propuesta (Enter=1, número o id): ");
         const selected = await selectFromListByIndexOrId(proposals, input, "Propuesta");
@@ -343,8 +370,9 @@ async function main() {
       case "8": {
         ui.title("Activar ventana desde propuesta");
 
-        const proposals =
-          (await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")) ?? [];
+        const proposals = asArray(
+          await safeCall(ui, adapter.listProposals?.bind(adapter), "adapter.listProposals no disponible")
+        );
 
         if (proposals.length === 0) {
           ui.warn("No hay propuestas.");
@@ -352,7 +380,7 @@ async function main() {
         }
 
         ui.info("Propuestas:");
-        ui.info(proposals.map(formatProposalLine).join("\n"));
+        ui.info(proposals.map((p: any, i: number) => formatProposalLine(p, i)).join("\n"));
 
         const input = await ui.ask("Selecciona propuesta (Enter=1, número o id): ");
         const selected = await selectFromListByIndexOrId(proposals, input, "Propuesta");
@@ -362,10 +390,8 @@ async function main() {
           ui,
           adapter.activateWindowFromProposal
             ? () => adapter.activateWindowFromProposal(selected.id, now)
-            : adapter.activateFromProposal
-            ? () => adapter.activateFromProposal(selected, now)
             : undefined,
-          "No encuentro método para activar ventana desde propuesta (activateWindowFromProposal/activateFromProposal)."
+          "No encuentro método para activar ventana desde propuesta (activateWindowFromProposal)."
         );
 
         if (out) {
@@ -381,7 +407,7 @@ async function main() {
         const userId = await pickUserId();
         const active = await safeCall(
           ui,
-          () => adapter.getActiveWindowForUser(userId, now),
+          adapter.getActiveWindowForUser ? () => adapter.getActiveWindowForUser(userId, now) : undefined,
           "adapter.getActiveWindowForUser no disponible."
         );
 
@@ -414,8 +440,13 @@ async function main() {
         const userId = await pickUserId();
         ui.title(`Revelaciones activas (${labelUser(userId, A, B)})`);
 
-        const out =
-          (await safeCall(ui, () => adapter.getRevelations(userId, now), "adapter.getRevelations no disponible")) ?? [];
+        const out = asArray(
+          await safeCall(
+            ui,
+            adapter.getRevelations ? () => adapter.getRevelations(userId, now) : undefined,
+            "adapter.getRevelations no disponible"
+          )
+        );
 
         ui.info(`Revelaciones activas: ${out.length}`);
         if (out.length > 0) {
