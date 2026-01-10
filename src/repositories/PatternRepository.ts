@@ -22,6 +22,10 @@ export class PatternRepository implements IRepository<Pattern> {
     return this.patterns.filter(p => p.user_id === userId);
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    this.patterns = this.patterns.filter(p => p.user_id !== userId);
+  }
+
   async upsertByKey(pattern: Pattern): Promise<Pattern> {
     const index = this.patterns.findIndex(p => 
       p.user_id === pattern.user_id &&

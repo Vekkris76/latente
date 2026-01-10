@@ -33,8 +33,8 @@ export class CoPresenceDetectionService {
         const userB = userIds[j];
 
         // 4. No bloqueo ni reporte mutuo
-        if (await this.blockRepository.existsBlock(userA, userB)) continue;
-        if (await this.reportRepository.existsReport(userA, userB)) continue;
+        if (await this.blockRepository.existsBetween(userA, userB)) continue;
+        if (await this.reportRepository.existsBetween(userA, userB)) continue;
 
         // 5. Límites: max 1 propuesta activa por usuario
         if (await this.proposalStateRepository.hasActiveProposal(userA)) continue;

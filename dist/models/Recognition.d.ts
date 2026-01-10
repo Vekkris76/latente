@@ -1,17 +1,16 @@
 /**
- * Recognition entity según fase0/10_MODELO_DATOS_FUNCIONAL.md
+ * Recognition entity según ITERACIÓN 6a
  *
  * CAMPOS PROHIBIDOS (verificar en tests):
  * - location_at_confirmation
  * - precise_timestamp_shared_with_other_user
  */
-import { RecognitionStatus } from '../types/enums';
+export type RecognitionStatus = 'confirmed';
 export interface Recognition {
-    recognition_id: string;
-    window_id: string;
+    id: string;
+    active_window_id: string;
     user_id: string;
-    confirmed_at: Date;
-    is_mutual: boolean;
+    created_at: Date;
     status: RecognitionStatus;
 }
 export declare function validateRecognitionNoProhibitedFields(recognition: Recognition): boolean;

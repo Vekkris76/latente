@@ -15,4 +15,8 @@ export class CooldownRepository {
   async getCooldownUntil(userId: string): Promise<Date | null> {
     return this.cooldowns.get(userId) || null;
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    this.cooldowns.delete(userId);
+  }
 }

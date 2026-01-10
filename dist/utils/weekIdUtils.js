@@ -8,6 +8,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateWeekIdFormat = validateWeekIdFormat;
 exports.getCurrentWeekId = getCurrentWeekId;
+exports.parseWeekId = parseWeekId;
+exports.computeSpanWeeks = computeSpanWeeks;
+exports.checkWithin4WeeksSpan = checkWithin4WeeksSpan;
 /**
  * Valida formato de week_id
  *
@@ -51,5 +54,47 @@ function getCurrentWeekId() {
     // Formatear como YYYY-Www
     const weekStr = weekNumber.toString().padStart(2, '0');
     return `${year}-W${weekStr}`;
+}
+/**
+ * Parsea un week_id en año y semana
+ */
+function parseWeekId(weekId) {
+    const [yearStr, weekStr] = weekId.split('-W');
+    return {
+        year: parseInt(yearStr, 10),
+        week: parseInt(weekStr, 10)
+    };
+}
+/**
+ * Calcula el span de semanas entre dos week_ids (inclusive)
+ * Asume que son del mismo año o años consecutivos.
+ * Para v1 simplificamos asumiendo que no hay saltos de muchos años.
+ */
+function computeSpanWeeks(first, last) {
+    const p1 = parseWeekId(first);
+    const p2 = parseWeekId(last);
+    if (p1.year === p2.year) {
+        return p2.week - p1.week + 1;
+    }
+    // Si son años diferentes (ej: 2025-W52 y 2026-W02)
+    // Aproximación: (años de diferencia * 52) + semanas
+    // Para 4 semanas de ventana, solo nos importan años adyacentes
+    const yearDiff = p2.year - p1.year;
+    // Usamos 52 como base, aunque algunas semanas tienen 53. 
+    // Para una ventana de 4 semanas, si el span es > 4 ya no nos importa la exactitud extrema.
+    return (yearDiff * 52) + p2.week - p1.week + 1;
+}
+/**
+ * Verifica si un conjunto de semanas son consecutivas y están dentro de un span de 4 semanas.
+ * En LATENTE v1, "consecutivas" se interpreta como que el span entre la primera y la última es <= 4.
+ * El requisito dice "4 semanas consecutivas (máximo span entre primer y último week_id usado)".
+ */
+function checkWithin4WeeksSpan(weekIds) {
+    if (weekIds.length === 0)
+        return false;
+    const sortedWeeks = [...new Set(weekIds)].sort();
+    const first = sortedWeeks[0];
+    const last = sortedWeeks[sortedWeeks.length - 1];
+    return computeSpanWeeks(first, last) <= 4;
 }
 //# sourceMappingURL=weekIdUtils.js.map

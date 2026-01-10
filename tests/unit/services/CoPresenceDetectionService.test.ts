@@ -118,7 +118,12 @@ describe('CoPresenceDetectionService', () => {
     await eventRepo.save(createEvent(userA, { week_id: '2026-W01' }));
     await eventRepo.save(createEvent(userB, { week_id: '2026-W01' }));
 
-    await blockRepo.saveBlock(userA, userB);
+    await blockRepo.save({
+      id: 'blk1',
+      blocker_user_id: userA,
+      blocked_user_id: userB,
+      created_at: new Date()
+    });
 
     const detected = await service.detectForUsers([userA, userB]);
 
@@ -134,7 +139,13 @@ describe('CoPresenceDetectionService', () => {
     await eventRepo.save(createEvent(userA, { week_id: '2026-W01' }));
     await eventRepo.save(createEvent(userB, { week_id: '2026-W01' }));
 
-    await reportRepo.saveReport(userA, userB);
+    await reportRepo.save({
+      id: 'rep1',
+      reporter_user_id: userA,
+      reported_user_id: userB,
+      reason: 'harassment',
+      created_at: new Date()
+    });
 
     const detected = await service.detectForUsers([userA, userB]);
 

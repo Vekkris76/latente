@@ -4,14 +4,23 @@
   "description": "Sistema de co-presencias latentes (anti-engagement)",
   "main": "dist/index.js",
   "scripts": {
-  "build": "tsc",
-  "test": "jest",
-  "test:watch": "jest --watch",
-  "test:coverage": "jest --coverage",
-  "test:unit": "jest tests/unit",
-  "test:integration": "jest tests/integration"
-},
-  "keywords": ["co-presence", "anti-engagement", "privacy"],
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "runner:demo": "ts-node scripts/runners/demoHappyPath.ts",
+    "runner:sad": "ts-node scripts/runners/demoSadPaths.ts",
+    "docs:api": "ts-node scripts/generate/generateApiServicios.ts",
+    "cli": "ts-node scripts/cli/index.ts",
+    "demo:happy": "ts-node -e \"(async () => { const { createAdapter } = require('./scripts/cli/adapter'); const { runHappyPath } = require('./scripts/cli/flows/happyPath'); const now = new Date('2026-01-10T10:00:00.000Z'); const adapter = createAdapter(); const res = await runHappyPath(adapter, now); console.log(JSON.stringify(res, null, 2)); })().catch(e=>{console.error(e);process.exit(1);});\""
+  },
+  "keywords": [
+    "co-presence",
+    "anti-engagement",
+    "privacy"
+  ],
   "author": "",
   "license": "UNLICENSED",
   "private": true,
@@ -20,7 +29,7 @@
     "@types/node": "^20.0.0",
     "jest": "^29.5.0",
     "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.0.0"
-  },
-  "dependencies": {}
+  }
 }

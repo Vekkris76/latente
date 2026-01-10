@@ -31,6 +31,14 @@ export class ActiveWindowRepository implements IRepository<ActiveWindow> {
     this.windows.delete(id);
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, window] of this.windows.entries()) {
+      if (window.user_a_id === userId || window.user_b_id === userId) {
+        this.windows.delete(id);
+      }
+    }
+  }
+
   async findAll(): Promise<ActiveWindow[]> {
     return Array.from(this.windows.values());
   }

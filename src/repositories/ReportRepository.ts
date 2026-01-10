@@ -1,17 +1,27 @@
+import { Report } from '../models/Report';
+
 export class ReportRepository {
-  private reports: Set<string> = new Set();
+  private reports: Map<string, Report> = new Map();
 
-  private getKey(userA: string, userB: string): string {
-    const [min, max] = [userA, userB].sort();
-    return `${min}:${max}`;
+  async save(report: Report): Promise<Report> {
+    this.reports.set(report.id, report);
+    return report;
   }
 
-  async saveReport(userA: string, userB: string): Promise<void> {
-    this.reports.add(this.getKey(userA, userB));
+  async existsBetween(userA: string, userB: string): Promise<boolean> {
+    for (const report of this.reports.values()) {
+      if (
+        (report.reporter_user_id === userA && report.reported_user_id === userB) ||
+        (report.reporter_user_id === userB && report.reported_user_id === userA)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  async existsReport(userA: string, userB: string): Promise<boolean> {
-    return this.reports.has(this.getKey(userA, userB));
+  async listByReporter(userId: string): Promise<Report[]> {
+    return Array.from(this.reports.values()).filter(r => r.reporter_user_id === userId);
   }
 
   async clear(): Promise<void> {

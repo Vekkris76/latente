@@ -13,13 +13,13 @@ exports.TIME_BUCKETS = [
     'evening',
     'night'
 ];
-// Línea 5: Valores: `cafe`, `library`, `park`, `gym`, `coworkorking`, `cultural`, `transport`, `education`, `other`
+// Línea 5: Valores: `cafe`, `library`, `park`, `gym`, `coworking`, `cultural`, `transport`, `education`, `other`
 exports.PLACE_CATEGORIES = [
     'cafe',
     'library',
     'park',
     'gym',
-    'coworkorking',
+    'coworking',
     'cultural',
     'transport',
     'education',
@@ -89,8 +89,8 @@ exports.PROHIBITED_FIELDS = [
     // Identificadores de dispositivo
     'device_id',
     'advertising_id',
-    'IMEI',
-    'UDID',
+    'imei',
+    'udid',
     'android_id',
     // Identificadores de usuario en claro
     'user_id_cleartext',

@@ -55,6 +55,10 @@ export class CoPresenceRepository implements IRepository<LatentCoPresence> {
     return this.copresences;
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    this.copresences = this.copresences.filter(cp => cp.user_a_id !== userId && cp.user_b_id !== userId);
+  }
+
   async clear(): Promise<void> {
     this.copresences = [];
   }

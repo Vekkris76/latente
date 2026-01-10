@@ -1,15 +1,11 @@
 /**
- * Block entity según fase0/10_MODELO_DATOS_FUNCIONAL.md
+ * Block entity según ITERACIÓN 7a
  */
-import { BlockStatus } from '../types/enums';
 export interface Block {
-    block_id: string;
+    id: string;
     blocker_user_id: string;
     blocked_user_id: string;
-    blocked_at: Date;
-    reason?: string;
-    revelation_id?: string;
-    status: BlockStatus;
+    created_at: Date;
 }
 export declare function validateBlockNotSelfBlock(block: Block): boolean;
 //# sourceMappingURL=Block.d.ts.map

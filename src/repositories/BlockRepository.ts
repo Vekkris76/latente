@@ -1,17 +1,38 @@
+import { Block } from '../models/Block';
+
 export class BlockRepository {
-  private blocks: Set<string> = new Set();
+  private blocks: Map<string, Block> = new Map();
 
-  private getKey(userA: string, userB: string): string {
-    const [min, max] = [userA, userB].sort();
-    return `${min}:${max}`;
+  async save(block: Block): Promise<Block> {
+    this.blocks.set(block.id, block);
+    return block;
   }
 
-  async saveBlock(userA: string, userB: string): Promise<void> {
-    this.blocks.add(this.getKey(userA, userB));
+  async existsBetween(userA: string, userB: string): Promise<boolean> {
+    for (const block of this.blocks.values()) {
+      if (
+        (block.blocker_user_id === userA && block.blocked_user_id === userB) ||
+        (block.blocker_user_id === userB && block.blocked_user_id === userA)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  async existsBlock(userA: string, userB: string): Promise<boolean> {
-    return this.blocks.has(this.getKey(userA, userB));
+  async existsBlock(blocker: string, blocked: string): Promise<boolean> {
+    for (const block of this.blocks.values()) {
+      if (block.blocker_user_id === blocker && block.blocked_user_id === blocked) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async listByUser(userId: string): Promise<Block[]> {
+    return Array.from(this.blocks.values()).filter(
+      b => b.blocker_user_id === userId || b.blocked_user_id === userId
+    );
   }
 
   async clear(): Promise<void> {

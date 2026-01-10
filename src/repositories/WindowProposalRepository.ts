@@ -53,4 +53,12 @@ export class WindowProposalRepository implements IRepository<WindowProposal> {
   async delete(id: string): Promise<void> {
     this.proposals.delete(id);
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, prop] of this.proposals.entries()) {
+      if (prop.userA_id === userId || prop.userB_id === userId) {
+        this.proposals.delete(id);
+      }
+    }
+  }
 }

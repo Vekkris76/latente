@@ -6,7 +6,8 @@
  * - location_overlap, proximity_estimate
  * - number_of_shared_patterns
  */
-import { PlaceCategory, TimeBucket, LatentCoPresenceStatus } from '../types/enums';
+import { LatentCoPresenceStatus } from '../types/enums';
+import { PlaceCategory, TimeBucket } from '../types/catalogs';
 export interface LatentCoPresence {
     copresence_id: string;
     user_a_id: string;
@@ -15,6 +16,7 @@ export interface LatentCoPresence {
     pattern_id_b: string;
     shared_place_category: PlaceCategory;
     shared_time_bucket: TimeBucket;
+    overlap_week_ids: string[];
     detected_at: Date;
     status: LatentCoPresenceStatus;
 }

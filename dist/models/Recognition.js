@@ -1,6 +1,6 @@
 "use strict";
 /**
- * Recognition entity según fase0/10_MODELO_DATOS_FUNCIONAL.md
+ * Recognition entity según ITERACIÓN 6a
  *
  * CAMPOS PROHIBIDOS (verificar en tests):
  * - location_at_confirmation

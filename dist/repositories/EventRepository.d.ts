@@ -23,5 +23,6 @@ export declare class EventRepository implements IRepository<AbstractEvent> {
      * @returns Lista de eventos
      */
     findAllByUser(userId: string): Promise<AbstractEvent[]>;
+    deleteByUserId(userId: string): Promise<void>;
 }
 //# sourceMappingURL=EventRepository.d.ts.map

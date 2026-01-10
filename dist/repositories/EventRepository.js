@@ -33,6 +33,13 @@ class EventRepository {
     async findAllByUser(userId) {
         return Array.from(this.events.values()).filter(event => event.user_id === userId);
     }
+    async deleteByUserId(userId) {
+        for (const [id, event] of this.events.entries()) {
+            if (event.user_id === userId) {
+                this.events.delete(id);
+            }
+        }
+    }
 }
 exports.EventRepository = EventRepository;
 //# sourceMappingURL=EventRepository.js.map

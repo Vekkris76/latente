@@ -22,9 +22,9 @@ function validatePatternNoProhibitedFields(pattern) {
     if (hasProhibited) {
         throw new Error('CRÍTICO: Pattern contiene campos prohibidos');
     }
-    // Validación de event_count mínimo (según fase0/02_DEFINICION_PATRONES.md)
-    if (pattern.event_count < 3) {
-        throw new Error(`Pattern must have at least 3 events, got ${pattern.event_count}`);
+    // Validación de occurrences_count mínimo (según fase0/02_DEFINICION_PATRONES.md)
+    if (pattern.occurrences_count < 3) {
+        throw new Error(`Pattern must have at least 3 events, got ${pattern.occurrences_count}`);
     }
     return true;
 }

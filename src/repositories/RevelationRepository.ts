@@ -17,7 +17,7 @@ export class RevelationRepository implements IRepository<Revelation> {
     const [id1, id2] = [userAId, userBId].sort();
     for (const revelation of this.revelations.values()) {
       const [r1, r2] = [revelation.user_a_id, revelation.user_b_id].sort();
-      if (r1 === id1 && r2 === id2 && revelation.status === 'active') {
+      if (r1 === id1 && r2 === id2) {
         return revelation;
       }
     }
@@ -39,5 +39,13 @@ export class RevelationRepository implements IRepository<Revelation> {
       }
     }
     return purgedIds;
+  }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, revelation] of this.revelations.entries()) {
+      if (revelation.user_a_id === userId || revelation.user_b_id === userId) {
+        this.revelations.delete(id);
+      }
+    }
   }
 }

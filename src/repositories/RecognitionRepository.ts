@@ -34,6 +34,14 @@ export class RecognitionRepository implements IRepository<Recognition> {
     }
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, recognition] of this.recognitions.entries()) {
+      if (recognition.user_id === userId) {
+        this.recognitions.delete(id);
+      }
+    }
+  }
+
   async purgeExpired(now: Date): Promise<number> {
     let count = 0;
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);

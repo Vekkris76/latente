@@ -23,8 +23,10 @@ __exportStar(require("./AbstractEvent"), exports);
 __exportStar(require("./Pattern"), exports);
 __exportStar(require("./LatentCoPresence"), exports);
 __exportStar(require("./SyncWindow"), exports);
+__exportStar(require("./ActiveWindow"), exports);
 __exportStar(require("./Recognition"), exports);
 __exportStar(require("./Revelation"), exports);
+__exportStar(require("./ConversationMessage"), exports);
 __exportStar(require("./Block"), exports);
 __exportStar(require("./Report"), exports);
 //# sourceMappingURL=index.js.map

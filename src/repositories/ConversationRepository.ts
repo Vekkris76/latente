@@ -26,4 +26,12 @@ export class ConversationRepository implements IRepository<ConversationMessage> 
       }
     }
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, message] of this.messages.entries()) {
+      if (message.sender_user_id === userId) {
+        this.messages.delete(id);
+      }
+    }
+  }
 }

@@ -13,6 +13,10 @@ export class ProposalStateRepository {
     }
   }
 
+  async deleteByUserId(userId: string): Promise<void> {
+    this.activeProposals.delete(userId);
+  }
+
   async clear(): Promise<void> {
     this.activeProposals.clear();
   }

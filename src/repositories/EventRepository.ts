@@ -37,4 +37,12 @@ export class EventRepository implements IRepository<AbstractEvent> {
       event => event.user_id === userId
     );
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    for (const [id, event] of this.events.entries()) {
+      if (event.user_id === userId) {
+        this.events.delete(id);
+      }
+    }
+  }
 }

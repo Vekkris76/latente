@@ -16,4 +16,8 @@ export class UserRepository implements IRepository<User> {
   async findById(id: string): Promise<User | null> {
     return this.users.get(id) || null;
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    this.users.delete(userId);
+  }
 }

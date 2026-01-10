@@ -15,6 +15,9 @@ class UserRepository {
     async findById(id) {
         return this.users.get(id) || null;
     }
+    async deleteByUserId(userId) {
+        this.users.delete(userId);
+    }
 }
 exports.UserRepository = UserRepository;
 //# sourceMappingURL=UserRepository.js.map
