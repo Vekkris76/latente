@@ -1,9 +1,9 @@
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { EventIngestionService } from '../../../src/services/events/EventIngestionService';
-import { PatternDetectionService } from '../../../src/services/events/PatternDetectionService';
-import { AbstractEventValidator } from '../../../src/validation/AbstractEventValidator';
-import { AbstractEventInput } from '../../../src/types/AbstractEvent.types';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { PatternRepository } from '../../../src/infrastructure/persistence/memory/PatternRepository';
+import { EventIngestionService } from '../../../src/application/services/events/EventIngestionService';
+import { PatternDetectionService } from '../../../src/application/services/events/PatternDetectionService';
+import { AbstractEventValidator } from '../../../src/domain/validation/AbstractEventValidator';
+import { AbstractEventInput } from '../../../src/domain/types/AbstractEvent.types';
 
 describe('Pattern Detection Flow (Integration)', () => {
   let eventRepo: EventRepository;

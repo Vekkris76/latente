@@ -1,11 +1,11 @@
-import { RevelationService } from '../../../src/services/RevelationService';
-import { PurgeService } from '../../../src/services/PurgeService';
-import { RevelationRepository } from '../../../src/repositories/RevelationRepository';
-import { ActiveWindowRepository } from '../../../src/repositories/ActiveWindowRepository';
-import { RecognitionRepository } from '../../../src/repositories/RecognitionRepository';
-import { ConversationRepository } from '../../../src/repositories/ConversationRepository';
-import { ActiveWindow } from '../../../src/models/ActiveWindow';
-import { Recognition } from '../../../src/models/Recognition';
+import { RevelationService } from '../../../src/application/services/RevelationService';
+import { PurgeService } from '../../../src/application/services/PurgeService';
+import { RevelationRepository } from '../../../src/infrastructure/persistence/memory/RevelationRepository';
+import { ActiveWindowRepository } from '../../../src/infrastructure/persistence/memory/ActiveWindowRepository';
+import { RecognitionRepository } from '../../../src/infrastructure/persistence/memory/RecognitionRepository';
+import { ConversationRepository } from '../../../src/infrastructure/persistence/memory/ConversationRepository';
+import { ActiveWindow } from '../../../src/domain/models/ActiveWindow';
+import { Recognition } from '../../../src/domain/models/Recognition';
 
 describe('RevelationService & PurgeService', () => {
   let revelationService: RevelationService;

@@ -1,18 +1,18 @@
-import { EventIngestionService } from '../../../src/services/events/EventIngestionService';
-import { PatternDetectionService } from '../../../src/services/events/PatternDetectionService';
-import { CoPresenceDetectionService } from '../../../src/services/events/CoPresenceDetectionService';
-import { WindowProposalService } from '../../../src/services/WindowProposalService';
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { WindowProposalRepository } from '../../../src/repositories/WindowProposalRepository';
-import { CooldownRepository } from '../../../src/repositories/CooldownRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { UserRepository } from '../../../src/repositories/UserRepository';
-import { BlockRepository } from '../../../src/repositories/BlockRepository';
-import { ReportRepository } from '../../../src/repositories/ReportRepository';
-import { AbstractEventValidator } from '../../../src/validation/AbstractEventValidator';
-import { PlaceCategory, TimeBucket, DayType } from '../../../src/types/enums';
+import { EventIngestionService } from '../../../src/application/services/events/EventIngestionService';
+import { PatternDetectionService } from '../../../src/application/services/events/PatternDetectionService';
+import { CoPresenceDetectionService } from '../../../src/application/services/events/CoPresenceDetectionService';
+import { WindowProposalService } from '../../../src/application/services/WindowProposalService';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { PatternRepository } from '../../../src/infrastructure/persistence/memory/PatternRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/persistence/memory/CoPresenceRepository';
+import { WindowProposalRepository } from '../../../src/infrastructure/persistence/memory/WindowProposalRepository';
+import { CooldownRepository } from '../../../src/infrastructure/persistence/memory/CooldownRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/persistence/memory/ProposalStateRepository';
+import { UserRepository } from '../../../src/infrastructure/persistence/memory/UserRepository';
+import { BlockRepository } from '../../../src/infrastructure/persistence/memory/BlockRepository';
+import { ReportRepository } from '../../../src/infrastructure/persistence/memory/ReportRepository';
+import { AbstractEventValidator } from '../../../src/domain/validation/AbstractEventValidator';
+import { PlaceCategory, TimeBucket, DayType } from '../../../src/domain/types/enums';
 
 describe('Window Proposal Flow Integration', () => {
   let ingestionService: EventIngestionService;

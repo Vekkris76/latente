@@ -1,19 +1,19 @@
-import { AccountDeletionService } from '../../../src/services/AccountDeletionService';
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { WindowProposalRepository } from '../../../src/repositories/WindowProposalRepository';
-import { ActiveWindowRepository } from '../../../src/repositories/ActiveWindowRepository';
-import { RecognitionRepository } from '../../../src/repositories/RecognitionRepository';
-import { RevelationRepository } from '../../../src/repositories/RevelationRepository';
-import { ConversationRepository } from '../../../src/repositories/ConversationRepository';
-import { CooldownRepository } from '../../../src/repositories/CooldownRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { UserRepository } from '../../../src/repositories/UserRepository';
-import { BlockRepository } from '../../../src/repositories/BlockRepository';
+import { AccountDeletionService } from '../../../src/application/services/AccountDeletionService';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { PatternRepository } from '../../../src/infrastructure/persistence/memory/PatternRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/persistence/memory/CoPresenceRepository';
+import { WindowProposalRepository } from '../../../src/infrastructure/persistence/memory/WindowProposalRepository';
+import { ActiveWindowRepository } from '../../../src/infrastructure/persistence/memory/ActiveWindowRepository';
+import { RecognitionRepository } from '../../../src/infrastructure/persistence/memory/RecognitionRepository';
+import { RevelationRepository } from '../../../src/infrastructure/persistence/memory/RevelationRepository';
+import { ConversationRepository } from '../../../src/infrastructure/persistence/memory/ConversationRepository';
+import { CooldownRepository } from '../../../src/infrastructure/persistence/memory/CooldownRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/persistence/memory/ProposalStateRepository';
+import { UserRepository } from '../../../src/infrastructure/persistence/memory/UserRepository';
+import { BlockRepository } from '../../../src/infrastructure/persistence/memory/BlockRepository';
 
-import { User } from '../../../src/models/User';
-import { AccountStatus, LatentCoPresenceStatus } from '../../../src/types/enums';
+import { User } from '../../../src/domain/models/User';
+import { AccountStatus, LatentCoPresenceStatus } from '../../../src/domain/types/enums';
 
 describe('AccountDeletionService', () => {
   let service: AccountDeletionService;

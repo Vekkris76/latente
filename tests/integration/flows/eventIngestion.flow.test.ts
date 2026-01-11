@@ -1,7 +1,7 @@
-import { EventIngestionService } from '../../../src/services/events/EventIngestionService';
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { AbstractEventValidator } from '../../../src/validation/AbstractEventValidator';
-import { AbstractEventInput } from '../../../src/types/AbstractEvent.types';
+import { EventIngestionService } from '../../../src/application/services/events/EventIngestionService';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { AbstractEventValidator } from '../../../src/domain/validation/AbstractEventValidator';
+import { AbstractEventInput } from '../../../src/domain/types/AbstractEvent.types';
 
 describe('Event Ingestion Flow Integration Test', () => {
   let service: EventIngestionService;

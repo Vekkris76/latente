@@ -1,12 +1,12 @@
-import { WindowDecisionService } from '../../../src/services/WindowDecisionService';
-import { WindowProposalRepository } from '../../../src/repositories/WindowProposalRepository';
-import { CooldownRepository } from '../../../src/repositories/CooldownRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { WindowProposal } from '../../../src/models/WindowProposal';
-import { LatentCoPresence } from '../../../src/models/LatentCoPresence';
-import { LatentCoPresenceStatus, PlaceCategory, TimeBucket, DayType } from '../../../src/types/enums';
-import { PROPOSAL_TTL_HOURS } from '../../../src/config/decisions';
+import { WindowDecisionService } from '../../../src/application/services/WindowDecisionService';
+import { WindowProposalRepository } from '../../../src/infrastructure/persistence/memory/WindowProposalRepository';
+import { CooldownRepository } from '../../../src/infrastructure/persistence/memory/CooldownRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/persistence/memory/ProposalStateRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/persistence/memory/CoPresenceRepository';
+import { WindowProposal } from '../../../src/domain/models/WindowProposal';
+import { LatentCoPresence } from '../../../src/domain/models/LatentCoPresence';
+import { LatentCoPresenceStatus, PlaceCategory, TimeBucket, DayType } from '../../../src/domain/types/enums';
+import { PROPOSAL_TTL_HOURS } from '../../../src/infrastructure/config/decisions';
 
 describe('WindowDecisionService', () => {
   let service: WindowDecisionService;

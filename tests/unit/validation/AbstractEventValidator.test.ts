@@ -1,4 +1,4 @@
-import { AbstractEventValidator } from '../../../src/validation/AbstractEventValidator';
+import { AbstractEventValidator } from '../../../src/domain/validation/AbstractEventValidator';
 
 describe('AbstractEventValidator', () => {
   let validator: AbstractEventValidator;

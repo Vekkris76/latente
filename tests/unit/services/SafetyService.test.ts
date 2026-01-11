@@ -1,22 +1,22 @@
-import { SafetyService } from '../../../src/services/SafetyService';
-import { BlockRepository } from '../../../src/repositories/BlockRepository';
-import { ReportRepository } from '../../../src/repositories/ReportRepository';
-import { RevelationRepository } from '../../../src/repositories/RevelationRepository';
-import { ConversationRepository } from '../../../src/repositories/ConversationRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { WindowProposalRepository } from '../../../src/repositories/WindowProposalRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { ActiveWindowRepository } from '../../../src/repositories/ActiveWindowRepository';
-import { RecognitionRepository } from '../../../src/repositories/RecognitionRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { CoPresenceDetectionService } from '../../../src/services/events/CoPresenceDetectionService';
+import { SafetyService } from '../../../src/application/services/SafetyService';
+import { BlockRepository } from '../../../src/infrastructure/persistence/memory/BlockRepository';
+import { ReportRepository } from '../../../src/infrastructure/persistence/memory/ReportRepository';
+import { RevelationRepository } from '../../../src/infrastructure/persistence/memory/RevelationRepository';
+import { ConversationRepository } from '../../../src/infrastructure/persistence/memory/ConversationRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/persistence/memory/CoPresenceRepository';
+import { WindowProposalRepository } from '../../../src/infrastructure/persistence/memory/WindowProposalRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/persistence/memory/ProposalStateRepository';
+import { ActiveWindowRepository } from '../../../src/infrastructure/persistence/memory/ActiveWindowRepository';
+import { RecognitionRepository } from '../../../src/infrastructure/persistence/memory/RecognitionRepository';
+import { PatternRepository } from '../../../src/infrastructure/persistence/memory/PatternRepository';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { CoPresenceDetectionService } from '../../../src/application/services/events/CoPresenceDetectionService';
 
-import { Revelation } from '../../../src/models/Revelation';
-import { LatentCoPresence } from '../../../src/models/LatentCoPresence';
-import { WindowProposal } from '../../../src/models/WindowProposal';
-import { ActiveWindow } from '../../../src/models/ActiveWindow';
-import { PlaceCategory, TimeBucket, DayType, LatentCoPresenceStatus, PatternStatus } from '../../../src/types/enums';
+import { Revelation } from '../../../src/domain/models/Revelation';
+import { LatentCoPresence } from '../../../src/domain/models/LatentCoPresence';
+import { WindowProposal } from '../../../src/domain/models/WindowProposal';
+import { ActiveWindow } from '../../../src/domain/models/ActiveWindow';
+import { PlaceCategory, TimeBucket, DayType, LatentCoPresenceStatus, PatternStatus } from '../../../src/domain/types/enums';
 
 describe('SafetyService', () => {
   let service: SafetyService;

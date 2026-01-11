@@ -14,7 +14,7 @@ import {
   validateRevelationNoProhibitedFields,
   validateBlockNotSelfBlock,
   validateReportNotSelfReport,
-} from '../../src/models';
+} from '../../src/domain/models';
 
 import {
   TimeBucket,
@@ -30,7 +30,7 @@ import {
   RevelationStatus,
   BlockStatus,
   ReportStatus
-} from '../../src/types/enums';
+} from '../../src/domain/types/enums';
 
 describe('Prohibited Fields Validation', () => {
   describe('User - GPS and location fields', () => {

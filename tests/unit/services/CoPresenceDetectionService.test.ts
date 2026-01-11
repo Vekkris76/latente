@@ -1,13 +1,13 @@
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { BlockRepository } from '../../../src/repositories/BlockRepository';
-import { ReportRepository } from '../../../src/repositories/ReportRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { CoPresenceDetectionService } from '../../../src/services/events/CoPresenceDetectionService';
-import { Pattern } from '../../../src/models/Pattern';
-import { AbstractEvent } from '../../../src/types/AbstractEvent.types';
-import { PatternStatus, LatentCoPresenceStatus } from '../../../src/types/enums';
+import { PatternRepository } from '../../../src/infrastructure/persistence/memory/PatternRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/persistence/memory/CoPresenceRepository';
+import { EventRepository } from '../../../src/infrastructure/persistence/memory/EventRepository';
+import { BlockRepository } from '../../../src/infrastructure/persistence/memory/BlockRepository';
+import { ReportRepository } from '../../../src/infrastructure/persistence/memory/ReportRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/persistence/memory/ProposalStateRepository';
+import { CoPresenceDetectionService } from '../../../src/application/services/events/CoPresenceDetectionService';
+import { Pattern } from '../../../src/domain/models/Pattern';
+import { AbstractEvent } from '../../../src/domain/types/AbstractEvent.types';
+import { PatternStatus, LatentCoPresenceStatus } from '../../../src/domain/types/enums';
 
 describe('CoPresenceDetectionService', () => {
   let patternRepo: PatternRepository;
