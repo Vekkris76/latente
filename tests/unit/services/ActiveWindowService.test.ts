@@ -1,7 +1,7 @@
-import { ActiveWindowService } from '../../../src/services/ActiveWindowService';
-import { ActiveWindowRepository } from '../../../src/repositories/ActiveWindowRepository';
-import { WindowProposal } from '../../../src/models/WindowProposal';
-import { PlaceCategory, TimeBucket, DayType } from '../../../src/types/enums';
+import { ActiveWindowService } from '../../../src/application/services/ActiveWindowService';
+import { ActiveWindowRepository } from '../../../src/infrastructure/repositories/memory/ActiveWindowRepository';
+import { WindowProposal } from '../../../src/domain/models/WindowProposal';
+import { PlaceCategory, TimeBucket, DayType } from '../../../src/domain/types/enums';
 
 describe('ActiveWindowService', () => {
   let service: ActiveWindowService;

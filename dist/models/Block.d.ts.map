@@ -1,1 +1,0 @@
-{"version":3,"file":"Block.d.ts","sourceRoot":"","sources":["../../src/models/Block.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,MAAM,WAAW,KAAK;IACpB,EAAE,EAAE,MAAM,CAAC;IACX,eAAe,EAAE,MAAM,CAAC;IACxB,eAAe,EAAE,MAAM,CAAC;IACxB,UAAU,EAAE,IAAI,CAAC;CAClB;AAED,wBAAgB,yBAAyB,CAAC,KAAK,EAAE,KAAK,GAAG,OAAO,CAK/D"}

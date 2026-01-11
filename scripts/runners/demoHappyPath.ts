@@ -9,29 +9,29 @@
  * Sin cron: simulamos el paso del tiempo y llamamos a los servicios/métodos disponibles.
  */
 
-import { EventIngestionService } from "../../src/services/events/EventIngestionService";
-import { AbstractEventValidator } from "../../src/validation/AbstractEventValidator";
+import { EventIngestionService } from "../../src/application/services/events/EventIngestionService";
+import { AbstractEventValidator } from "../../src/domain/validation/AbstractEventValidator";
 
-import { PatternDetectionService } from "../../src/services/events/PatternDetectionService";
-import { CoPresenceDetectionService } from "../../src/services/events/CoPresenceDetectionService";
-import { WindowProposalService } from "../../src/services/windows/WindowProposalService";
-import { WindowDecisionService } from "../../src/services/windows/WindowDecisionService";
-import { ActiveWindowService } from "../../src/services/windows/ActiveWindowService";
-import { RecognitionService } from "../../src/services/recognition/RecognitionService";
-import { RevelationService } from "../../src/services/revelation/RevelationService";
+import { PatternDetectionService } from "../../src/application/services/events/PatternDetectionService";
+import { CoPresenceDetectionService } from "../../src/application/services/events/CoPresenceDetectionService";
+import { WindowProposalService } from "../../src/application/services/WindowProposalService";
+import { WindowDecisionService } from "../../src/application/services/WindowDecisionService";
+import { ActiveWindowService } from "../../src/application/services/ActiveWindowService";
+import { RecognitionService } from "../../src/application/services/RecognitionService";
+import { RevelationService } from "../../src/application/services/RevelationService";
 
-import { EventRepository } from "../../src/repositories/EventRepository";
-import { PatternRepository } from "../../src/repositories/PatternRepository";
-import { CoPresenceRepository } from "../../src/repositories/CoPresenceRepository";
-import { WindowProposalRepository } from "../../src/repositories/WindowProposalRepository";
-import { ActiveWindowRepository } from "../../src/repositories/ActiveWindowRepository";
-import { RecognitionRepository } from "../../src/repositories/RecognitionRepository";
-import { RevelationRepository } from "../../src/repositories/RevelationRepository";
-import { ConversationRepository } from "../../src/repositories/ConversationRepository";
-import { BlockRepository } from "../../src/repositories/BlockRepository";
-import { ReportRepository } from "../../src/repositories/ReportRepository";
-import { CooldownRepository } from "../../src/repositories/CooldownRepository";
-import { ProposalStateRepository } from "../../src/repositories/ProposalStateRepository";
+import { EventRepository } from "../../src/infrastructure/repositories/memory/EventRepository";
+import { PatternRepository } from "../../src/infrastructure/repositories/memory/PatternRepository";
+import { CoPresenceRepository } from "../../src/infrastructure/repositories/memory/CoPresenceRepository";
+import { WindowProposalRepository } from "../../src/infrastructure/repositories/memory/WindowProposalRepository";
+import { ActiveWindowRepository } from "../../src/infrastructure/repositories/memory/ActiveWindowRepository";
+import { RecognitionRepository } from "../../src/infrastructure/repositories/memory/RecognitionRepository";
+import { RevelationRepository } from "../../src/infrastructure/repositories/memory/RevelationRepository";
+import { ConversationRepository } from "../../src/infrastructure/repositories/memory/ConversationRepository";
+import { BlockRepository } from "../../src/infrastructure/repositories/memory/BlockRepository";
+import { ReportRepository } from "../../src/infrastructure/repositories/memory/ReportRepository";
+import { CooldownRepository } from "../../src/infrastructure/repositories/memory/CooldownRepository";
+import { ProposalStateRepository } from "../../src/infrastructure/repositories/memory/ProposalStateRepository";
 
 function log(title: string, obj?: unknown) {
   console.log(`\n=== ${title} ===`);
@@ -146,7 +146,8 @@ async function scenarioDecline() {
   const { services, repos } = await buildServices();
   await seedMinimalOverlap(services.ingestion, A, B);
 
-  await services.patternDetection.detectForUsers([A, B]);
+  await services.patternDetection.detectForUser(A);
+  await services.patternDetection.detectForUser(B);
   await services.copresenceDetection.detectForUsers([A, B]);
 
   const proposals = await services.proposalService.generateFromCoPresences(now);
@@ -171,7 +172,8 @@ async function scenarioTimeout() {
   const { services, repos } = await buildServices();
   await seedMinimalOverlap(services.ingestion, A, B);
 
-  await services.patternDetection.detectForUsers([A, B]);
+  await services.patternDetection.detectForUser(A);
+  await services.patternDetection.detectForUser(B);
   await services.copresenceDetection.detectForUsers([A, B]);
 
   const proposals = await services.proposalService.generateFromCoPresences(now);
@@ -204,7 +206,8 @@ async function scenarioNoMutual() {
   const { services, repos } = await buildServices();
   await seedMinimalOverlap(services.ingestion, A, B);
 
-  await services.patternDetection.detectForUsers([A, B]);
+  await services.patternDetection.detectForUser(A);
+  await services.patternDetection.detectForUser(B);
   await services.copresenceDetection.detectForUsers([A, B]);
 
   const proposals = await services.proposalService.generateFromCoPresences(now);

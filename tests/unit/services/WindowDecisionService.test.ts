@@ -1,11 +1,11 @@
-import { WindowDecisionService } from '../../../src/services/WindowDecisionService';
-import { WindowProposalRepository } from '../../../src/repositories/WindowProposalRepository';
-import { CooldownRepository } from '../../../src/repositories/CooldownRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { WindowProposal } from '../../../src/models/WindowProposal';
-import { LatentCoPresence } from '../../../src/models/LatentCoPresence';
-import { LatentCoPresenceStatus, PlaceCategory, TimeBucket, DayType } from '../../../src/types/enums';
+import { WindowDecisionService } from '../../../src/application/services/WindowDecisionService';
+import { WindowProposalRepository } from '../../../src/infrastructure/repositories/memory/WindowProposalRepository';
+import { CooldownRepository } from '../../../src/infrastructure/repositories/memory/CooldownRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/repositories/memory/ProposalStateRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/repositories/memory/CoPresenceRepository';
+import { WindowProposal } from '../../../src/domain/models/WindowProposal';
+import { LatentCoPresence } from '../../../src/domain/models/LatentCoPresence';
+import { LatentCoPresenceStatus, PlaceCategory, TimeBucket, DayType } from '../../../src/domain/types/enums';
 import { PROPOSAL_TTL_HOURS } from '../../../src/config/decisions';
 
 describe('WindowDecisionService', () => {

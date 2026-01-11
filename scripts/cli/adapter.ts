@@ -1,29 +1,29 @@
-import { AbstractEventInput } from "../../src/types/AbstractEvent.types";
+import { AbstractEventInput } from "../../src/domain/types/AbstractEvent.types";
 
-import { AbstractEventValidator } from "../../src/validation/AbstractEventValidator";
+import { AbstractEventValidator } from "../../src/domain/validation/AbstractEventValidator";
 
-import { EventRepository } from "../../src/repositories/EventRepository";
-import { PatternRepository } from "../../src/repositories/PatternRepository";
-import { CoPresenceRepository } from "../../src/repositories/CoPresenceRepository";
-import { WindowProposalRepository } from "../../src/repositories/WindowProposalRepository";
-import { ActiveWindowRepository } from "../../src/repositories/ActiveWindowRepository";
-import { RecognitionRepository } from "../../src/repositories/RecognitionRepository";
-import { RevelationRepository } from "../../src/repositories/RevelationRepository";
-import { BlockRepository } from "../../src/repositories/BlockRepository";
-import { ReportRepository } from "../../src/repositories/ReportRepository";
-import { CooldownRepository } from "../../src/repositories/CooldownRepository";
-import { ProposalStateRepository } from "../../src/repositories/ProposalStateRepository";
+import { EventRepository } from "../../src/infrastructure/repositories/memory/EventRepository";
+import { PatternRepository } from "../../src/infrastructure/repositories/memory/PatternRepository";
+import { CoPresenceRepository } from "../../src/infrastructure/repositories/memory/CoPresenceRepository";
+import { WindowProposalRepository } from "../../src/infrastructure/repositories/memory/WindowProposalRepository";
+import { ActiveWindowRepository } from "../../src/infrastructure/repositories/memory/ActiveWindowRepository";
+import { RecognitionRepository } from "../../src/infrastructure/repositories/memory/RecognitionRepository";
+import { RevelationRepository } from "../../src/infrastructure/repositories/memory/RevelationRepository";
+import { BlockRepository } from "../../src/infrastructure/repositories/memory/BlockRepository";
+import { ReportRepository } from "../../src/infrastructure/repositories/memory/ReportRepository";
+import { CooldownRepository } from "../../src/infrastructure/repositories/memory/CooldownRepository";
+import { ProposalStateRepository } from "../../src/infrastructure/repositories/memory/ProposalStateRepository";
 
-import { EventIngestionService } from "../../src/services/events/EventIngestionService";
-import { PatternDetectionService } from "../../src/services/events/PatternDetectionService";
-import { CoPresenceDetectionService } from "../../src/services/events/CoPresenceDetectionService";
-import { WindowProposalService } from "../../src/services/WindowProposalService";
-import { WindowDecisionService } from "../../src/services/WindowDecisionService";
-import { ActiveWindowService } from "../../src/services/ActiveWindowService";
-import { RecognitionService } from "../../src/services/RecognitionService";
-import { RevelationService } from "../../src/services/RevelationService";
-import { SafetyService } from "../../src/services/SafetyService";
-import { AccountDeletionService } from "../../src/services/AccountDeletionService";
+import { EventIngestionService } from "../../src/application/services/events/EventIngestionService";
+import { PatternDetectionService } from "../../src/application/services/events/PatternDetectionService";
+import { CoPresenceDetectionService } from "../../src/application/services/events/CoPresenceDetectionService";
+import { WindowProposalService } from "../../src/application/services/WindowProposalService";
+import { WindowDecisionService } from "../../src/application/services/WindowDecisionService";
+import { ActiveWindowService } from "../../src/application/services/ActiveWindowService";
+import { RecognitionService } from "../../src/application/services/RecognitionService";
+import { RevelationService } from "../../src/application/services/RevelationService";
+import { SafetyService } from "../../src/application/services/SafetyService";
+import { AccountDeletionService } from "../../src/application/services/AccountDeletionService";
 
 export type Adapter = ReturnType<typeof createAdapter>;
 

@@ -1,4 +1,4 @@
-import { DayType, TimeBucket } from '../types/enums';
+import { DayType, TimeBucket } from '../domain/types/enums';
 
 export function getDayType(date: Date): DayType {
   const day = date.getDay();

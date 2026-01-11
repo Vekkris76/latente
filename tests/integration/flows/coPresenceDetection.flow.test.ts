@@ -1,14 +1,14 @@
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { CoPresenceRepository } from '../../../src/repositories/CoPresenceRepository';
-import { BlockRepository } from '../../../src/repositories/BlockRepository';
-import { ReportRepository } from '../../../src/repositories/ReportRepository';
-import { ProposalStateRepository } from '../../../src/repositories/ProposalStateRepository';
-import { EventIngestionService } from '../../../src/services/events/EventIngestionService';
-import { PatternDetectionService } from '../../../src/services/events/PatternDetectionService';
-import { CoPresenceDetectionService } from '../../../src/services/events/CoPresenceDetectionService';
-import { AbstractEventValidator } from '../../../src/validation/AbstractEventValidator';
-import { AbstractEventInput } from '../../../src/types/AbstractEvent.types';
+import { EventRepository } from '../../../src/infrastructure/repositories/memory/EventRepository';
+import { PatternRepository } from '../../../src/infrastructure/repositories/memory/PatternRepository';
+import { CoPresenceRepository } from '../../../src/infrastructure/repositories/memory/CoPresenceRepository';
+import { BlockRepository } from '../../../src/infrastructure/repositories/memory/BlockRepository';
+import { ReportRepository } from '../../../src/infrastructure/repositories/memory/ReportRepository';
+import { ProposalStateRepository } from '../../../src/infrastructure/repositories/memory/ProposalStateRepository';
+import { EventIngestionService } from '../../../src/application/services/events/EventIngestionService';
+import { PatternDetectionService } from '../../../src/application/services/events/PatternDetectionService';
+import { CoPresenceDetectionService } from '../../../src/application/services/events/CoPresenceDetectionService';
+import { AbstractEventValidator } from '../../../src/domain/validation/AbstractEventValidator';
+import { AbstractEventInput } from '../../../src/domain/types/AbstractEvent.types';
 
 describe('Co-Presence Detection Flow (Integration)', () => {
   let eventRepo: EventRepository;

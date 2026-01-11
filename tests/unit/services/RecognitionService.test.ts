@@ -1,9 +1,9 @@
-import { RecognitionService } from '../../../src/services/RecognitionService';
-import { ActiveWindowRepository } from '../../../src/repositories/ActiveWindowRepository';
-import { RecognitionRepository } from '../../../src/repositories/RecognitionRepository';
-import { RevelationService } from '../../../src/services/RevelationService';
-import { RevelationRepository } from '../../../src/repositories/RevelationRepository';
-import { ActiveWindow } from '../../../src/models/ActiveWindow';
+import { RecognitionService } from '../../../src/application/services/RecognitionService';
+import { ActiveWindowRepository } from '../../../src/infrastructure/repositories/memory/ActiveWindowRepository';
+import { RecognitionRepository } from '../../../src/infrastructure/repositories/memory/RecognitionRepository';
+import { RevelationService } from '../../../src/application/services/RevelationService';
+import { RevelationRepository } from '../../../src/infrastructure/repositories/memory/RevelationRepository';
+import { ActiveWindow } from '../../../src/domain/models/ActiveWindow';
 
 describe('RecognitionService', () => {
   let service: RecognitionService;

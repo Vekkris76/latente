@@ -7,18 +7,18 @@
 **Completado**: 2026-01-10
 
 **Archivos creados**:
-- `src/types/enums.ts` - Enums según fase0/01_ABSTRACCION_DATOS.md y fase0/10_MODELO_DATOS_FUNCIONAL.md
-- `src/models/User.ts` - Entidad User con validación de campos prohibidos
-- `src/models/ConsentState.ts` - Entidad ConsentState
-- `src/models/AbstractEvent.ts` - Entidad AbstractEvent con validación estricta
-- `src/models/Pattern.ts` - Entidad Pattern con validación de event_count >= 3
-- `src/models/LatentCoPresence.ts` - Entidad LatentCoPresence
-- `src/models/SyncWindow.ts` - Entidad SyncWindow con validación de duración 30-45 min
-- `src/models/Recognition.ts` - Entidad Recognition
-- `src/models/Revelation.ts` - Entidad Revelation con cálculo de expires_at
-- `src/models/Block.ts` - Entidad Block con validación anti-self-block
-- `src/models/Report.ts` - Entidad Report con validación anti-self-report
-- `src/models/index.ts` - Exports
+- `src/domain/types/enums.ts` - Enums según fase0/01_ABSTRACCION_DATOS.md y fase0/10_MODELO_DATOS_FUNCIONAL.md
+- `src/domain/models/User.ts` - Entidad User con validación de campos prohibidos
+- `src/domain/models/ConsentState.ts` - Entidad ConsentState
+- `src/domain/models/AbstractEvent.ts` - Entidad AbstractEvent con validación estricta
+- `src/domain/models/Pattern.ts` - Entidad Pattern con validación de event_count >= 3
+- `src/domain/models/LatentCoPresence.ts` - Entidad LatentCoPresence
+- `src/domain/models/SyncWindow.ts` - Entidad SyncWindow con validación de duración 30-45 min
+- `src/domain/models/Recognition.ts` - Entidad Recognition
+- `src/domain/models/Revelation.ts` - Entidad Revelation con cálculo de expires_at
+- `src/domain/models/Block.ts` - Entidad Block con validación anti-self-block
+- `src/domain/models/Report.ts` - Entidad Report con validación anti-self-report
+- `src/domain/models/index.ts` - Exports
 
 **Tests creados**:
 - `tests/models/prohibited-fields.test.ts` - Tests críticos que DEBEN FALLAR si aparecen campos prohibidos

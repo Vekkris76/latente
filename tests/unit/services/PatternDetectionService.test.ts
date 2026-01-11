@@ -1,7 +1,7 @@
-import { EventRepository } from '../../../src/repositories/EventRepository';
-import { PatternRepository } from '../../../src/repositories/PatternRepository';
-import { PatternDetectionService } from '../../../src/services/events/PatternDetectionService';
-import { AbstractEvent } from '../../../src/types/AbstractEvent.types';
+import { EventRepository } from '../../../src/infrastructure/repositories/memory/EventRepository';
+import { PatternRepository } from '../../../src/infrastructure/repositories/memory/PatternRepository';
+import { PatternDetectionService } from '../../../src/application/services/events/PatternDetectionService';
+import { AbstractEvent } from '../../../src/domain/types/AbstractEvent.types';
 
 describe('PatternDetectionService', () => {
   let eventRepo: EventRepository;
