@@ -36,10 +36,10 @@ COPY --from=build /app/dist ./dist
 # Create a non-root user and switch to it
 RUN groupadd -r nodeuser && useradd -r -g nodeuser nodeuser
 RUN chown -R nodeuser:nodeuser /app
-USER nodeuser
+USER node
 
 # Expose the port
 EXPOSE 3000
 
 # Entrypoint to run the Fastify server
-CMD ["node", "dist/src/interfaces/http/server.js"]
+CMD ["node", "dist/interfaces/http/server.js"]
