@@ -4,8 +4,9 @@ import { PostgresUserRepository } from '../../../../src/infrastructure/repositor
 import { AbstractEvent } from '../../../../src/domain/types/AbstractEvent.types';
 import { TimeBucket, PlaceCategory, DayType, DurationBucket, AbstractEventStatus, AccountStatus } from '../../../../src/domain/types/enums';
 import { randomUUID } from 'crypto';
+import { describePostgres } from '../../../helpers/postgresGate';
 
-describe('PostgresEventRepository', () => {
+describePostgres('PostgresEventRepository', () => {
   let repo: PostgresEventRepository;
   let userRepo: PostgresUserRepository;
   const userId = randomUUID();
@@ -15,8 +16,7 @@ describe('PostgresEventRepository', () => {
     userRepo = new PostgresUserRepository(pool);
     
     // Limpieza y setup de usuario
-    await pool.query('DELETE FROM abstract_events');
-    await pool.query('DELETE FROM users');
+    await pool.query('TRUNCATE TABLE users CASCADE');
     
     await userRepo.save({
       user_id: userId,

@@ -1,0 +1,21 @@
+services:
+  db_test:
+    image: postgres:16-alpine
+    container_name: latentum_db_test
+    environment:
+      - POSTGRES_DB=latentum_test
+      - POSTGRES_USER=latentum_app
+      - POSTGRES_PASSWORD=latentum_test_pass
+    ports:
+      - "55432:5432"
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/001-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U latentum_app -d latentum_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata_test:

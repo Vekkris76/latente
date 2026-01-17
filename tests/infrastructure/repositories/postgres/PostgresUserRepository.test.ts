@@ -3,14 +3,15 @@ import { PostgresUserRepository } from '../../../../src/infrastructure/repositor
 import { User } from '../../../../src/domain/models/User';
 import { AccountStatus } from '../../../../src/domain/types/enums';
 import { randomUUID } from 'crypto';
+import { describePostgres } from '../../../helpers/postgresGate';
 
-describe('PostgresUserRepository', () => {
+describePostgres('PostgresUserRepository', () => {
   let repo: PostgresUserRepository;
 
   beforeAll(async () => {
     repo = new PostgresUserRepository(pool);
     // Limpieza inicial
-    await pool.query('DELETE FROM users');
+    await pool.query('TRUNCATE TABLE users CASCADE');
   });
 
   afterAll(async () => {

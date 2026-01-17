@@ -96,6 +96,36 @@ curl http://localhost:3000/health
 
 ---
 
+## Tests
+
+El sistema de tests está dividido para permitir ejecución rápida sin dependencias externas por defecto.
+
+### 1. Tests estándar (sin Postgres)
+Ejecuta todos los tests unitarios y de integración que usan repositorios en memoria. No requiere base de datos.
+```bash
+npm test
+```
+
+### 2. Tests con Postgres
+Ejecuta la suite completa incluyendo tests de infraestructura Postgres y tests E2E.
+
+**Flujo recomendado para desarrollo local:**
+
+```bash
+# Levanta la DB de test y corre los tests
+npm run test:postgres
+
+# Limpiar infraestructura de test (opcional)
+npm run test:postgres:down
+```
+
+**Detalles técnicos:**
+- Levanta un contenedor Postgres en el puerto `55432`.
+- Base de datos: `latentum_test`, Usuario: `latentum_app`.
+- El script inyecta automáticamente `DATABASE_URL_TEST` y `ENABLE_POSTGRES_TESTS=true`.
+
+---
+
 ## Producción (VM OVH)
 
 Arranque:

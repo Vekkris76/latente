@@ -4,15 +4,16 @@ import { UserRepository as MemoryUserRepository } from '../../src/infrastructure
 import { User } from '../../src/domain/models/User';
 import { AccountStatus } from '../../src/domain/types/enums';
 import { randomUUID } from 'crypto';
+import { describePostgres } from '../helpers/postgresGate';
 
-describe('Paridad Memory vs Postgres - UserRepository', () => {
+describePostgres('Paridad Memory vs Postgres - UserRepository', () => {
   let pgRepo: PostgresUserRepository;
   let memRepo: MemoryUserRepository;
 
   beforeAll(async () => {
     pgRepo = new PostgresUserRepository(pool);
     memRepo = new MemoryUserRepository();
-    await pool.query('DELETE FROM users');
+    await pool.query('TRUNCATE TABLE users CASCADE');
   });
 
   afterAll(async () => {

@@ -1,77 +1,110 @@
-import Fastify, { FastifyInstance } from 'fastify';
-import fastifyJwt from '@fastify/jwt';
-import fastifyRateLimit from '@fastify/rate-limit';
+import fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
-import { errorHandler } from './middlewares/errorHandler';
-import dotenv from 'dotenv';
+import fastifyRateLimit from '@fastify/rate-limit';
+import fastifyJwt from '@fastify/jwt';
 
-dotenv.config();
+import { authRoutes } from './routes/auth';
+import { eventRoutes } from './routes/events';
+import { windowRoutes } from './routes/windows';
+import { recognitionRoutes } from './routes/recognitions';
+import { revelationRoutes } from './routes/revelations';
+import { safetyRoutes } from './routes/safety';
+import { accountRoutes } from './routes/account';
 
-export const createServer = async (): Promise<FastifyInstance> => {
-  const server = Fastify({
-    logger: {
-      level: 'info',
-      serializers: {
-        req(request) {
-          return {
-            method: request.method,
-            url: request.url,
-            hostname: request.hostname,
-            remoteAddress: request.ip
-          };
-        }
+type MetricsKey = string;
+
+/**
+ * Métricas ligeras (sin dependencias):
+ * - contador por method + route + status
+ * - expone /metrics en formato text/plain (simple)
+ */
+function createInMemoryMetrics() {
+  const counts = new Map<MetricsKey, number>();
+
+  function inc(method: string, route: string, status: number) {
+    const key = `${method} ${route} ${status}`;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  function render(): string {
+    const lines: string[] = [];
+    lines.push(`# latentum_metrics_v1`);
+    lines.push(`# HELP http_requests_total Total HTTP requests (method route status)`);
+    lines.push(`# TYPE http_requests_total counter`);
+    for (const [key, value] of counts.entries()) {
+      lines.push(`http_requests_total{key="${key.replace(/\\/g, '\\\\').replace(/\"/g, '\\"')}"} ${value}`);
+    }
+    return lines.join('\n') + '\n';
+  }
+
+  return { inc, render };
+}
+
+async function buildServer() {
+  const server = fastify({ 
+    logger: true,
+    ajv: {
+      customOptions: {
+        removeAdditional: false,
+        useDefaults: true,
+        coerceTypes: true,
+        allErrors: true
       }
     }
   });
 
-  // Plugins
-  await server.register(fastifyCors, {
-    origin: true
-  });
+  // --- JWT (OBLIGATORIO para que existan reply.jwtSign / request.jwtVerify tipados)
+  const jwtSecret = process.env.JWT_SECRET?.trim();
+  if (!jwtSecret || jwtSecret.length < 32) {
+    // Fail-safe en runtime: en prod no queremos un secret corto o vacío.
+    // En dev puedes poner uno largo en .env
+    throw new Error('JWT_SECRET is missing or too short (min 32 chars).');
+  }
 
   await server.register(fastifyJwt, {
-    secret: process.env.JWT_SECRET || 'super-secret-key-change-me'
+    secret: jwtSecret
   });
 
+  // --- CORS tightening
+  const corsOrigin = process.env.CORS_ORIGIN?.trim();
+
+  await server.register(fastifyCors, {
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true); // allow curl/health checks
+      if (!corsOrigin) return cb(new Error('CORS_ORIGIN not set'), false);
+      if (origin === corsOrigin) return cb(null, true);
+      return cb(new Error('Not allowed by CORS'), false);
+    },
+    credentials: false
+  });
+
+  // --- Rate limit global
   await server.register(fastifyRateLimit, {
-    max: 100,
-    timeWindow: '1 minute',
-    // No persistir ni loguear IP fuera de lo estrictamente necesario para el rate limit en memoria
+    global: true,
+    max: Number(process.env.RL_GLOBAL_MAX ?? 300),
+    timeWindow: process.env.RL_GLOBAL_WINDOW ?? '1 minute',
     keyGenerator: (request) => request.ip
   });
 
-  // AJV Configuration for strict validation
-  server.setValidatorCompiler(({ schema }: any) => {
-    const Ajv = require('ajv');
-    const addFormats = require('ajv-formats');
-    const ajv = new Ajv({
-      removeAdditional: false,
-      useDefaults: true,
-      coerceTypes: true,
-      allErrors: true,
-      strict: true
-    });
-    addFormats(ajv);
-    return ajv.compile(schema);
+  // --- Metrics (in-memory)
+  const metrics = createInMemoryMetrics();
+
+  server.addHook('onResponse', async (req, reply) => {
+    const route =
+      (req.routeOptions && typeof req.routeOptions.url === 'string' && req.routeOptions.url) ||
+      (req.raw.url ? req.raw.url.split('?')[0] : 'unknown');
+
+    metrics.inc(req.method, route, reply.statusCode);
   });
 
-  // Error Handler
-  server.setErrorHandler(errorHandler);
-
-  // Health check
-  server.get('/health', async () => {
-    return { status: 'ok' };
+  server.get('/metrics', async (_req, reply) => {
+    reply.header('Content-Type', 'text/plain; charset=utf-8');
+    return metrics.render();
   });
 
-  // Routes
-  const { authRoutes } = await import('./routes/auth');
-  const { eventRoutes } = await import('./routes/events');
-  const { windowRoutes } = await import('./routes/windows');
-  const { recognitionRoutes } = await import('./routes/recognitions');
-  const { revelationRoutes } = await import('./routes/revelations');
-  const { safetyRoutes } = await import('./routes/safety');
-  const { accountRoutes } = await import('./routes/account');
+  server.get('/health', async () => ({ status: 'ok' }));
 
+  // --- Routes
   await server.register(authRoutes, { prefix: '/auth' });
   await server.register(eventRoutes, { prefix: '/events' });
   await server.register(windowRoutes, { prefix: '/windows' });
@@ -81,18 +114,29 @@ export const createServer = async (): Promise<FastifyInstance> => {
   await server.register(accountRoutes, { prefix: '/account' });
 
   return server;
-};
+}
 
+// Test-friendly factory (does NOT listen).
+export async function createServer() {
+  return buildServer();
+}
+
+// Also export for advanced usage (optional)
+export { buildServer };
+
+async function main() {
+  const server = await buildServer();
+  const port = Number(process.env.PORT ?? 3000);
+  const host = '0.0.0.0';
+  try {
+    await server.listen({ port, host });
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
+}
+
+// Only run if this file is the main entry point
 if (require.main === module) {
-  (async () => {
-    const server = await createServer();
-    const port = Number(process.env.PORT) || 3000;
-    try {
-      await server.listen({ port, host: '0.0.0.0' });
-      console.log(`Server listening on port ${port}`);
-    } catch (err) {
-      server.log.error(err);
-      process.exit(1);
-    }
-  })();
+  main();
 }

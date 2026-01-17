@@ -2,8 +2,9 @@ import { FastifyInstance } from 'fastify';
 import { createServer } from '../../src/interfaces/http/server';
 import pool from '../../src/infrastructure/database/client';
 import { randomUUID } from 'crypto';
+import { describePostgres } from '../helpers/postgresGate';
 
-describe('API E2E Tests', () => {
+describePostgres('API E2E Tests', () => {
   let server: FastifyInstance;
   let token: string;
   let userId: string;
