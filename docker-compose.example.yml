@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16
+    container_name: latentum-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: latentum
+      POSTGRES_USER: latentum_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U latentum_app -d latentum"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  api:
+    image: ghcr.io/vekkris76/latentum-api:latest
+    container_name: latentum-api
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  pgdata:
