@@ -8,6 +8,12 @@ export const safetyRoutes = async (server: FastifyInstance) => {
 
   server.post('/block', {
     preHandler: [authenticate],
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       body: S.object()
         .prop('blocked_user_id', S.string().format('uuid').required())

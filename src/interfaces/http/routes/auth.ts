@@ -19,6 +19,12 @@ export const authRoutes = async (server: FastifyInstance) => {
   }, controller.requestCode);
 
   server.post('/verify-code', {
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       body: S.object()
         .prop('email', S.string().format('email').required())
@@ -27,6 +33,12 @@ export const authRoutes = async (server: FastifyInstance) => {
   }, controller.verifyCode);
 
   server.post('/refresh', {
+    config: {
+      rateLimit: {
+        max: 10,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       body: S.object()
         .prop('refresh_token', S.string().required())
