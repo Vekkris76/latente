@@ -140,3 +140,4 @@ curl http://127.0.0.1:3000/health
 ## Nota
 
 Este proyecto no busca maximizar retención ni engagement. Busca explorar una forma deliberada, ética y privada de conexión humana.
+Deploy auto: test dissabte, 17 de gener de 2026, 14:26:48 CET
