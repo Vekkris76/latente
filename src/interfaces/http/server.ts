@@ -68,30 +68,26 @@ async function buildServer() {
   // --- CORS tightening
   const corsOrigin = process.env.CORS_ORIGIN?.trim();
   const isProd = process.env.NODE_ENV === 'production';
-  const whitelist = ['https://app.latentum.app'];
-  if (corsOrigin) whitelist.push(corsOrigin);
+  
+  // Whitelist estricta deduplicada
+  const allowedOrigins = new Set(['https://app.latentum.app']);
+  if (corsOrigin) allowedOrigins.add(corsOrigin);
 
   await server.register(fastifyCors, {
     origin: (origin, cb) => {
-      // 1. No origin (direct access, same-origin) -> Allow
-      if (!origin) {
-        cb(null, true);
-        return;
-      }
-
-      // 2. Production: Strict whitelist
+      // En producción, lista blanca estricta
       if (isProd) {
-        if (whitelist.includes(origin)) {
+        if (origin && allowedOrigins.has(origin)) {
           cb(null, true);
         } else {
-          // Reject: do not emit Access-Control-Allow-Origin
+          // No origin o no permitido -> No emitir cabecera
           cb(null, false);
         }
         return;
       }
 
-      // 3. Development: Allow localhost + whitelist
-      if (origin.startsWith('http://localhost:') || whitelist.includes(origin)) {
+      // En desarrollo, permitir localhost y whitelist
+      if (!origin || origin.startsWith('http://localhost:') || allowedOrigins.has(origin)) {
         cb(null, true);
       } else {
         cb(null, false);
