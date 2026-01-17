@@ -1,15 +1,57 @@
-node_modules/
-dist/
-coverage/
-*.log
-
-# macOS
-.DS_Store
-
-# Environment files
+# =========================
+# Entorno
+# =========================
 .env
 .env.*
 !.env.example
 
-# IDE
+# =========================
+# Docker / Runtime
+# =========================
+pgdata/
+backups/
+.state/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+*.log.*
+*.gz
+
+# =========================
+# Node / TypeScript
+# =========================
+node_modules/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Tests
+# =========================
+tests/tmp/
+tests/output/
+
+# =========================
+# IDEs / OS
+# =========================
 .vscode/
+.idea/
+.DS_Store
+
+# =========================
+# Certs / Seguridad
+# =========================
+*.pem
+*.key
+*.crt
+
+# =========================
+# Miscelánea
+# =========================
+*.swp
+*.bak
