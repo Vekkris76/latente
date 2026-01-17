@@ -68,26 +68,34 @@ async function buildServer() {
   // --- CORS tightening
   const corsOrigin = process.env.CORS_ORIGIN?.trim();
   const isProd = process.env.NODE_ENV === 'production';
+  const whitelist = ['https://app.latentum.app'];
+  if (corsOrigin) whitelist.push(corsOrigin);
 
   await server.register(fastifyCors, {
     origin: (origin, cb) => {
-      // Allow if no origin (curl, same-origin, etc.)
-      if (!origin) return cb(null, true);
+      // 1. No origin (direct access, same-origin) -> Allow
+      if (!origin) {
+        cb(null, true);
+        return;
+      }
 
-      // In production, be strict
+      // 2. Production: Strict whitelist
       if (isProd) {
-        if (origin === 'https://app.latentum.app' || (corsOrigin && origin === corsOrigin)) {
-          return cb(null, true);
+        if (whitelist.includes(origin)) {
+          cb(null, true);
+        } else {
+          // Reject: do not emit Access-Control-Allow-Origin
+          cb(null, false);
         }
-        return cb(new Error('Not allowed by CORS'), false);
+        return;
       }
 
-      // In development, allow localhost and corsOrigin
-      if (origin.startsWith('http://localhost:') || (corsOrigin && origin === corsOrigin)) {
-        return cb(null, true);
+      // 3. Development: Allow localhost + whitelist
+      if (origin.startsWith('http://localhost:') || whitelist.includes(origin)) {
+        cb(null, true);
+      } else {
+        cb(null, false);
       }
-
-      return cb(new Error('Not allowed by CORS'), false);
     },
     credentials: true
   });
