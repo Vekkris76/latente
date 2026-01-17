@@ -2,4 +2,14 @@ node_modules/
 dist/
 coverage/
 *.log
+
+# macOS
 .DS_Store
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
