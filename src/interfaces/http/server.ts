@@ -67,29 +67,52 @@ async function buildServer() {
 
   // --- CORS tightening
   const corsOrigin = process.env.CORS_ORIGIN?.trim();
+  const isProd = process.env.NODE_ENV === 'production';
 
   await server.register(fastifyCors, {
     origin: (origin, cb) => {
-      if (!origin) return cb(null, true); // allow curl/health checks
-      if (!corsOrigin) return cb(new Error('CORS_ORIGIN not set'), false);
-      if (origin === corsOrigin) return cb(null, true);
+      // Allow if no origin (curl, same-origin, etc.)
+      if (!origin) return cb(null, true);
+
+      // In production, be strict
+      if (isProd) {
+        if (origin === 'https://app.latentum.app' || (corsOrigin && origin === corsOrigin)) {
+          return cb(null, true);
+        }
+        return cb(new Error('Not allowed by CORS'), false);
+      }
+
+      // In development, allow localhost and corsOrigin
+      if (origin.startsWith('http://localhost:') || (corsOrigin && origin === corsOrigin)) {
+        return cb(null, true);
+      }
+
       return cb(new Error('Not allowed by CORS'), false);
     },
-    credentials: false
+    credentials: true
   });
 
   // --- Rate limit global
   await server.register(fastifyRateLimit, {
     global: true,
-    max: Number(process.env.RL_GLOBAL_MAX ?? 300),
+    max: Number(process.env.RL_GLOBAL_MAX ?? 100),
     timeWindow: process.env.RL_GLOBAL_WINDOW ?? '1 minute',
-    keyGenerator: (request) => request.ip
+    keyGenerator: (request) => request.ip,
+    errorResponseBuilder: (request, context) => ({
+      statusCode: 429,
+      error: 'Too Many Requests',
+      message: `Rate limit exceeded. Try again in ${context.after}.`,
+      date: new Date(),
+      expiresIn: context.after
+    })
   });
 
   // --- Metrics (in-memory)
   const metrics = createInMemoryMetrics();
+  const enableMetrics = process.env.ENABLE_METRICS === 'true';
 
   server.addHook('onResponse', async (req, reply) => {
+    if (!enableMetrics) return;
     const route =
       (req.routeOptions && typeof req.routeOptions.url === 'string' && req.routeOptions.url) ||
       (req.raw.url ? req.raw.url.split('?')[0] : 'unknown');
@@ -97,10 +120,12 @@ async function buildServer() {
     metrics.inc(req.method, route, reply.statusCode);
   });
 
-  server.get('/metrics', async (_req, reply) => {
-    reply.header('Content-Type', 'text/plain; charset=utf-8');
-    return metrics.render();
-  });
+  if (enableMetrics) {
+    server.get('/metrics', async (_req, reply) => {
+      reply.header('Content-Type', 'text/plain; charset=utf-8');
+      return metrics.render();
+    });
+  }
 
   server.get('/health', async () => ({ status: 'ok' }));
 

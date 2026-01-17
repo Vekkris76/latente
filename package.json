@@ -10,7 +10,7 @@
     "test:coverage": "jest --coverage",
     "test:unit": "jest tests/unit",
     "test:integration": "jest tests/integration",
-    "test:postgres": "npm run test:postgres:up && cross-env NODE_ENV=test ENABLE_POSTGRES_TESTS=true DATABASE_URL_TEST=postgresql://latentum_app:latentum_test_pass@127.0.0.1:55432/latentum_test jest",
+    "test:postgres": "npm run test:postgres:up && cross-env NODE_ENV=test ENABLE_POSTGRES_TESTS=true DATABASE_URL_TEST=postgresql://latentum_app:latentum_test_pass@127.0.0.1:55432/latentum_test jest --detectOpenHandles",
     "test:postgres:up": "docker compose -f docker-compose.test.yml up -d --wait",
     "test:postgres:down": "docker compose -f docker-compose.test.yml down -v",
     "runner:demo": "ts-node scripts/runners/demoHappyPath.ts",

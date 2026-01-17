@@ -80,19 +80,28 @@ tests/
 
 ---
 
-## Arranque local (desarrollo)
+## Quick start dev
 
 1) Instalar dependencias
+```bash
 npm install
+```
 
-2) Compilar
-npm run build
+2) Configurar variables de entorno
+```bash
+cp .env.example .env
+# Ajustar JWT_SECRET (min 32 chars)
+```
 
-3) Ejecutar
+3) Ejecutar en desarrollo
+```bash
 npm run dev
+```
 
 Healthcheck:
+```bash
 curl http://localhost:3000/health
+```
 
 ---
 
@@ -123,6 +132,21 @@ npm run test:postgres:down
 - Levanta un contenedor Postgres en el puerto `55432`.
 - Base de datos: `latentum_test`, Usuario: `latentum_app`.
 - El script inyecta automáticamente `DATABASE_URL_TEST` y `ENABLE_POSTGRES_TESTS=true`.
+
+---
+
+## Env vars
+
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `PORT` | Puerto de la API | `3000` |
+| `JWT_SECRET` | Secreto para JWT (min 32 chars) | - |
+| `DATABASE_URL` | URL de Postgres (prod/dev) | - |
+| `DATABASE_URL_TEST` | URL de Postgres para tests | `postgresql://latentum_app:latentum_test_pass@127.0.0.1:55432/latentum_test` |
+| `ENABLE_POSTGRES_TESTS` | Activa tests contra Postgres | `false` |
+| `CORS_ORIGIN` | Origin permitido para CORS | - |
+| `ENABLE_METRICS` | Activa endpoint `/metrics` | `false` |
+| `RL_GLOBAL_MAX` | Rate limit global (req/min) | `100` |
 
 ---
 

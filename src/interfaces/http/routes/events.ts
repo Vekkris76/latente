@@ -8,6 +8,12 @@ export const eventRoutes = async (server: FastifyInstance) => {
 
   server.post('/', {
     preHandler: [authenticate],
+    config: {
+      rateLimit: {
+        max: 20,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       headers: {
         type: 'object',

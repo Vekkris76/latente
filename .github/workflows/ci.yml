@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-unit:
+    name: Unit & Integration (Memory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  test-postgres:
+    name: Postgres Integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Start Postgres
+        run: docker compose -f docker-compose.test.yml up -d
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            if docker exec latente-db-test pg_isready -U user_test -d latente_test; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+          echo "Postgres failed to start"
+          exit 1
+      - name: Run Postgres Tests
+        run: npm run test:postgres
+        env:
+          DATABASE_URL_TEST: postgresql://user_test:pass_test@localhost:55432/latente_test
+          ENABLE_POSTGRES_TESTS: true
+      - name: Stop Postgres
+        if: always()
+        run: docker compose -f docker-compose.test.yml down

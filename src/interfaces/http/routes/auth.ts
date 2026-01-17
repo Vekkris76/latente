@@ -6,6 +6,12 @@ export const authRoutes = async (server: FastifyInstance) => {
   const controller = new AuthController();
 
   server.post('/request-code', {
+    config: {
+      rateLimit: {
+        max: 5,
+        timeWindow: '1 minute'
+      }
+    },
     schema: {
       body: S.object()
         .prop('email', S.string().format('email').required())
